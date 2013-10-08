@@ -45,6 +45,7 @@ CBUFFER_END
 float4x4 _LightMatrix0;
 sampler2D _LightTextureB0;
 
+float4 _GlobalShadowColor;
 
 #if defined (POINT_COOKIE)
 samplerCUBE _LightTexture0;
@@ -241,7 +242,8 @@ half4 CalculateLight (v2f i)
 	spec *= saturate(atten);
 	
 	half4 res;
-	res.xyz = _LightColor.rgb * (diff * atten);
+	//res.xyz = _LightColor.rgb * (diff * atten);
+	res.xyz = lerp(_GlobalShadowColor, _LightColor.rgb * (diff * atten), atten);
 	res.w = spec * Luminance (_LightColor.rgb);
 	
 	float fade = fadeDist * unity_LightmapFade.z + unity_LightmapFade.w;
